@@ -4,8 +4,10 @@
 # Name:    ssh-keygen-mfa-yubikey.sh
 # Description: Bash Script to Generate a MFA SSH Key with Yubikeys
 # Copyright (C) 2024 Alaska Center for Energy and Power, University of Alaska Fairbanks
+# License: For UAF Use Only
+# Source:  https://github.com/acep-uaf/acep-ssh-keygen-mfa
 # Author:  John Haverlack (jehaverlack@alaska.edu)
-# Version: 1.0.0
+# Version: 1.0.1
 # Date:    2024-01-20
 
 # Function to show usage
@@ -13,7 +15,11 @@ show_usage() {
     echo "Usage: $0 [optional_key_name]"
     echo "       $0 -h|--help"
     echo
-    echo "This script generates an Ed25519-SK SSH key using a YubiKey."
+    # Display all script metadata
+    echo "About:"
+    sed -n -e '/^# Name:/,/^$/p' "$0"
+    # echo
+    echo "This script generates an Ed25519-SK SSH key using a YubiKey on Debian based Linux systems."
     echo "If an optional key name is provided, it is used as the filename for the key."
     echo "Otherwise, the key file is named based on the hostname, date, and YubiKey serial number."
     echo
