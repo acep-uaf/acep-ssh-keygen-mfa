@@ -8,6 +8,24 @@
 # Version: 1.0.0
 # Date:    2024-01-20
 
+# Function to show usage
+show_usage() {
+    echo "Usage: $0 [optional_key_name]"
+    echo "       $0 -h|--help"
+    echo
+    echo "This script generates an Ed25519-SK SSH key using a YubiKey."
+    echo "If an optional key name is provided, it is used as the filename for the key."
+    echo "Otherwise, the key file is named based on the hostname, date, and YubiKey serial number."
+    echo
+    echo "Dependencies: ssh, ykman"
+    echo "To install dependencies: sudo apt install yubikey-manager"
+    exit 0
+}
+
+# Check for help option
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    show_usage
+fi
 
 # Function to check if a command exists
 command_exists() {
@@ -51,6 +69,8 @@ if [[ "$(printf '%s\n' "$required_yk_version" "$current_yk_version" | sort -V | 
     exit 1
 fi
 
+
+
 # Generate SSH key
 key_name=""
 if [ "$1" ]; then
@@ -58,7 +78,7 @@ if [ "$1" ]; then
 else
     # Extract YubiKey serial number for the key name
     yubikey_serial=$(ykman list | grep -oP 'Serial: \K[0-9]+')
-    key_name="$(hostname)-$(date +'%d-%m-%Y')-physical_yubikey_$yubikey_serial"
+    key_name="$(hostname)_$(date +'%Y-%m-%d')_yubikey_$yubikey_serial"
 fi
 
 ssh-keygen -t ed25519-sk -C "$key_name" -f "$HOME/.ssh/${key_name}"
